@@ -1,5 +1,5 @@
 config {
-  type: "table",
+  type: "incremental",
   schema: "dataform_reporting",
   tags: ["daily", "reporting"],
   description: "Combine both questions and answers into a single posts_all table",
@@ -33,6 +33,7 @@ select
   parent_id
 from
   ${ref("stg_posts_answers")}
+  ${when(incremental(), `WHERE created_at>=DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY) FROM ${ref("stg_posts_answers")}`) }
 union all
 select
   post_id,
@@ -44,3 +45,4 @@ select
   parent_id
 from
   ${ref("stg_posts_questions")}
+  ${when(incremental(), `WHERE created_at>=DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY) FROM  ${ref("stg_posts_questions")}`) }
