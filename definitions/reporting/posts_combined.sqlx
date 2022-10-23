@@ -33,7 +33,7 @@ select
   parent_id
 from
   ${ref("stg_posts_answers")}
-  ${when(incremental(), `WHERE created_at>=DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY)`) }
+  ${when(incremental(), `WHERE date(created_at)>=DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY)`) }
 union all
 select
   post_id,
@@ -45,4 +45,4 @@ select
   parent_id
 from
   ${ref("stg_posts_questions")}
-  ${when(incremental(), `WHERE created_at>=DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY)`) }
+  ${when(incremental(), `WHERE date(created_at)>=DATE_ADD(CURRENT_DATE(), INTERVAL -1 DAY)`) }
